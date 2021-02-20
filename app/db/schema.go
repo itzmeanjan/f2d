@@ -14,3 +14,21 @@ type Users struct {
 func (Users) TableName() string {
 	return "users"
 }
+
+// Tasks - Submitted job tracker table schema
+type Tasks struct {
+	ID         string    `gorm:"column:id;type:uuid;default:gen_random_uuid();primaryKey"`
+	Client     string    `gorm:"column:client;type:char(66);not null;index"`
+	StartBlock uint64    `gorm:"column:startBlock;type:bigint;not null;index"`
+	Contract   string    `gorm:"column:contract;type:char(66);index"`
+	Topic0     string    `gorm:"column:topic0;type:char(66);index"`
+	Topic1     string    `gorm:"column:topic1;type:char(66);index"`
+	Topic2     string    `gorm:"column:topic2;type:char(66);index"`
+	Topic3     string    `gorm:"column:topic3;type:char(66);index"`
+	TimeStamp  time.Time `gorm:"column:ts;type:timestamp;not null"`
+}
+
+// TableName - Overriding default table name
+func (Tasks) TableName() string {
+	return "tasks"
+}
