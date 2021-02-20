@@ -2,19 +2,25 @@
 
 package model
 
-type NewTodo struct {
-	Text   string `json:"text"`
-	UserID string `json:"userId"`
+type Event struct {
+	Contract string   `json:"contract"`
+	Topics   []string `json:"topics"`
 }
 
-type Todo struct {
-	ID   string `json:"id"`
-	Text string `json:"text"`
-	Done bool   `json:"done"`
-	User *User  `json:"user"`
+type JobConfirmation struct {
+	ID    string `json:"id"`
+	Event *Event `json:"event"`
 }
 
-type User struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+type NewEvent struct {
+	StartBlock string   `json:"startBlock"`
+	Contract   string   `json:"contract"`
+	Topics     []string `json:"topics"`
+}
+
+type Task struct {
+	ID          string `json:"id"`
+	StartBlock  string `json:"startBlock"`
+	Event       *Event `json:"event"`
+	SubmittedAt string `json:"submittedAt"`
 }
