@@ -1,6 +1,9 @@
 package config
 
 import (
+	"log"
+	"strconv"
+
 	"github.com/spf13/viper"
 )
 
@@ -32,8 +35,20 @@ func GetDbHost() string {
 }
 
 // GetDbPort - Database port to connect to
-func GetDbPort() string {
-	return Get("DB_PORT")
+func GetDbPort() uint16 {
+
+	port := Get("DB_PORT")
+
+	_port, err := strconv.ParseUint(port, 10, 16)
+	if err != nil {
+
+		log.Printf("[❗️] Error when parsing database port number : %s\n", err.Error())
+		return 0
+
+	}
+
+	return uint16(_port)
+
 }
 
 // GetDbName - Database to connect to
