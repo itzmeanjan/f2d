@@ -25,7 +25,9 @@ func Connect() *gorm.DB {
 			SkipDefaultTransaction: true, // all db writing to be wrapped inside transaction manually
 		})
 	if err != nil {
-		log.Fatalf("[!] Failed to connect to db : %s\n", err.Error())
+
+		log.Fatalf("[❗️] Failed to connect to db : %s\n", err.Error())
+
 	}
 
 	_db.AutoMigrate(&Users{}, &Tasks{}, &EventLogs{}, &TaskResults{})
