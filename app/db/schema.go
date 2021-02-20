@@ -30,7 +30,7 @@ type Tasks struct {
 	Topic2     string    `gorm:"column:topic2;type:char(66);index"`
 	Topic3     string    `gorm:"column:topic3;type:char(66);index"`
 	TimeStamp  time.Time `gorm:"column:ts;type:timestamp;not null"`
-	Users      Users     `gorm:"references:apiKey"`
+	Users      Users     `gorm:"foreignKey:client;references:apiKey"`
 }
 
 // TableName - Overriding default table name
@@ -52,4 +52,18 @@ type EventLogs struct {
 // TableName - Overriding default table name
 func (EventLogs) TableName() string {
 	return "event_logs"
+}
+
+// TaskResults - Stored job results
+type TaskResults struct {
+	BlockHash string    `gorm:"column:blockHash;type:char(66);not null;primaryKey"`
+	Index     uint      `gorm:"column:index;type:integer;not null;primaryKey"`
+	ID        string    `gorm:"column:id;type:uuid;not null;primaryKey"`
+	EventLogs EventLogs `gorm:"foreignKey:blockHash,index;references:blockHash,index"`
+	Tasks     Tasks     `gorm:"foreignKey:id;references:id"`
+}
+
+// TableName - Overriding default table name
+func (TaskResults) TableName() string {
+	return "task_results"
 }
