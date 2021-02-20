@@ -1,0 +1,29 @@
+type Event {
+  contract: String!
+  topics: [String!]!
+}
+
+input NewEvent {
+  startBlock: String!
+  event: Event!
+}
+
+type JobConfirmation {
+  id: String!
+  event: Event!
+}
+
+type Mutation {
+  createTask(event: NewEvent!): JobConfirmation!
+}
+
+type Task {
+  id: String!
+  startBlock: String!
+  event: Event!
+  submittedAt: String!
+}
+
+type Query {
+  tasks: [Task!]!
+}
