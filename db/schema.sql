@@ -12,12 +12,20 @@ create index on users(address);
 
 create table tasks (
     id uuid default gen_random_uuid() primary key,
-    client char(42) not null,
+    client char(66) not null,
     startBlock bigint not null,
     contract char(66),
     topic0 char(66),
     topic1 char(66),
     topic2 char(66),
     topic3 char(66),
-    ts timestamp not null
+    ts timestamp not null,
+    foreign key (client) references users(apiKey)
 );
+
+create index on tasks(client);
+create index on tasks(contract);
+create index on tasks(topic0);
+create index on tasks(topic1);
+create index on tasks(topic2);
+create index on tasks(topic3);
