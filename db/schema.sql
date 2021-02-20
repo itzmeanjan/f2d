@@ -29,3 +29,19 @@ create index on tasks(topic0);
 create index on tasks(topic1);
 create index on tasks(topic2);
 create index on tasks(topic3);
+
+create table event_logs (
+    origin char(42) not null,
+    index integer not null,
+    topics text[] not null,
+    data bytea,
+    txHash char(66) not null,
+    blockHash char(66) not null,
+    blockNumber bigint not null,
+    primary key (blockHash, index),
+);
+
+create index on event_logs(origin);
+create index on event_logs(txHash);
+create index on event_logs(blockNumber);
+create index on event_logs using gin(topics);
