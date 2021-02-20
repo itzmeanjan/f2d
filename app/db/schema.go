@@ -26,6 +26,7 @@ type Tasks struct {
 	Topic2     string    `gorm:"column:topic2;type:char(66);index"`
 	Topic3     string    `gorm:"column:topic3;type:char(66);index"`
 	TimeStamp  time.Time `gorm:"column:ts;type:timestamp;not null"`
+	Users      Users     `gorm:"references:apiKey"`
 }
 
 // TableName - Overriding default table name
