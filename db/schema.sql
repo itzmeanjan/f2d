@@ -46,7 +46,7 @@ create index on event_logs(txHash);
 create index on event_logs(blockNumber);
 create index on event_logs using gin(topics);
 
-create task_results (
+create table task_results (
     index integer not null,
     blockHash char(66) not null,
     id uuid not null,
