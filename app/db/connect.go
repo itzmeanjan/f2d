@@ -26,7 +26,8 @@ func Connect() *gorm.DB {
 		})
 	if err != nil {
 
-		log.Fatalf("[❗️] Failed to connect to db : %s\n", err.Error())
+		log.Printf("[❗️] Failed to connect to db : %s\n", err.Error())
+		return nil
 
 	}
 

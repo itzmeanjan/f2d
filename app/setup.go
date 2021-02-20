@@ -5,30 +5,38 @@ import (
 	"path/filepath"
 
 	"github.com/itzmeanjan/f2d/app/config"
+	"github.com/itzmeanjan/f2d/app/data"
 	"github.com/itzmeanjan/f2d/app/db"
 )
 
 // SetUp - Do basic ground set up work, required for
 // running `f2d` on this machine
-func SetUp() bool {
+func SetUp() *data.Resources {
 
 	path, err := filepath.Abs("./.env")
 	if err != nil {
 
 		log.Printf("[❗️] Failed to find `.env` : %s\n", err.Error())
-		return false
+		return nil
 
 	}
 
 	if err := config.Read(path); err != nil {
 
 		log.Printf("[❗️] Failed to read `.env` : %s\n", err.Error())
-		return false
+		return nil
 
 	}
 
-	db.Connect()
+	_db := db.Connect()
+	if _db == nil {
+		return nil
+	}
 
-	return true
+	resources := data.Resources{
+		DB: _db,
+	}
+
+	return &resources
 
 }
