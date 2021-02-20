@@ -24,6 +24,7 @@ create table tasks (
 );
 
 create index on tasks(client);
+create index on tasks(startBlock);
 create index on tasks(contract);
 create index on tasks(topic0);
 create index on tasks(topic1);
