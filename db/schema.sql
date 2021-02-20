@@ -38,10 +38,20 @@ create table event_logs (
     txHash char(66) not null,
     blockHash char(66) not null,
     blockNumber bigint not null,
-    primary key (blockHash, index),
+    primary key (blockHash, index)
 );
 
 create index on event_logs(origin);
 create index on event_logs(txHash);
 create index on event_logs(blockNumber);
 create index on event_logs using gin(topics);
+
+create task_results (
+    index integer not null,
+    blockHash char(66) not null,
+    id uuid not null,
+    primary key(blockHash, index, id),
+    foreign key (index) references event_logs(index),
+    foreign key (blockHash) references event_logs(blockHash),
+    foreign key (id) references tasks(id)
+);
