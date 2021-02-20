@@ -1,6 +1,10 @@
 package db
 
-import "time"
+import (
+	"time"
+
+	"github.com/lib/pq"
+)
 
 // Users - Users table definition
 type Users struct {
@@ -32,4 +36,20 @@ type Tasks struct {
 // TableName - Overriding default table name
 func (Tasks) TableName() string {
 	return "tasks"
+}
+
+// EventLogs - Received/ fetched event logs, emitted by smart contract interaction(s)
+type EventLogs struct {
+	BlockHash       string         `gorm:"column:blockHash;type:char(66);not null;primaryKey"`
+	Index           uint           `gorm:"column:index;type:integer;not null;primaryKey"`
+	Origin          string         `gorm:"column:origin;type:char(42);not null;index"`
+	Topics          pq.StringArray `gorm:"column:topics;type:text[];not null;index:,type:gin"`
+	Data            []byte         `gorm:"column:data;type:bytea"`
+	TransactionHash string         `gorm:"column:txhash;type:char(66);not null;index"`
+	BlockNumber     uint64         `gorm:"column:blockNumber;type:bigint;not null;index"`
+}
+
+// TableName - Overriding default table name
+func (EventLogs) TableName() string {
+	return "event_logs"
 }
