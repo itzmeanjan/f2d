@@ -1,6 +1,13 @@
 -- This is required for generating UUID in PostgreSQL
 create extension pgcrypto;
 
+create table users (
+    apiKey char(66) primary key,
+    address char(42) not null,
+    ts timestamp not null,
+    enabled boolean default true
+);
+
 create table tasks (
     id uuid default gen_random_uuid() primary key,
     client char(42) not null,
