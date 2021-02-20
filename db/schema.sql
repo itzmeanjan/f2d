@@ -8,6 +8,8 @@ create table users (
     enabled boolean default true
 );
 
+create index on users(address);
+
 create table tasks (
     id uuid default gen_random_uuid() primary key,
     client char(42) not null,
