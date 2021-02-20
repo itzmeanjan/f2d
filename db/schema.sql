@@ -2,7 +2,7 @@
 create extension pgcrypto;
 
 create table users (
-    apiKey char(66) primary key,
+    apikey char(66) primary key,
     address char(42) not null,
     ts timestamp not null,
     enabled boolean default true
@@ -13,18 +13,18 @@ create index on users(address);
 create table tasks (
     id uuid default gen_random_uuid() primary key,
     client char(66) not null,
-    startBlock bigint not null,
+    startblock bigint not null,
     contract char(66),
     topic0 char(66),
     topic1 char(66),
     topic2 char(66),
     topic3 char(66),
     ts timestamp not null,
-    foreign key (client) references users(apiKey)
+    foreign key (client) references users(apikey)
 );
 
 create index on tasks(client);
-create index on tasks(startBlock);
+create index on tasks(startblock);
 create index on tasks(contract);
 create index on tasks(topic0);
 create index on tasks(topic1);
@@ -36,23 +36,23 @@ create table event_logs (
     index integer not null,
     topics text[] not null,
     data bytea,
-    txHash char(66) not null,
-    blockHash char(66) not null,
-    blockNumber bigint not null,
-    primary key (blockHash, index)
+    txhash char(66) not null,
+    blockhash char(66) not null,
+    blocknumber bigint not null,
+    primary key (blockhash, index)
 );
 
 create index on event_logs(origin);
-create index on event_logs(txHash);
-create index on event_logs(blockNumber);
+create index on event_logs(txhash);
+create index on event_logs(blocknumber);
 create index on event_logs using gin(topics);
 
 create table task_results (
     index integer not null,
-    blockHash char(66) not null,
+    blockhash char(66) not null,
     id uuid not null,
-    primary key(blockHash, index, id),
+    primary key(blockhash, index, id),
     foreign key (index) references event_logs(index),
-    foreign key (blockHash) references event_logs(blockHash),
+    foreign key (blockhash) references event_logs(blockhash),
     foreign key (id) references tasks(id)
 );
