@@ -4,6 +4,7 @@ go 1.15
 
 require (
 	github.com/99designs/gqlgen v0.13.0
+	github.com/ethereum/go-ethereum v1.9.25
 	github.com/labstack/echo/v4 v4.2.0
 	github.com/lib/pq v1.9.0
 	github.com/spf13/viper v1.7.1
