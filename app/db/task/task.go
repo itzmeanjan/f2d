@@ -9,8 +9,8 @@ import (
 	"gorm.io/gorm"
 )
 
-// Create - Attempts to create one task entry in DB
-func Create(db *gorm.DB, user common.Hash, startBlock uint64, contract string, topics map[uint8]string) bool {
+// Create - Attempts to create task entry in DB
+func Create(db *gorm.DB, user common.Hash, startBlock uint64, contract string, topics map[uint8]string) (bool, string) {
 
 	task := &schema.Tasks{
 		Client:     user.Hex(),
@@ -23,7 +23,6 @@ func Create(db *gorm.DB, user common.Hash, startBlock uint64, contract string, t
 		for k, v := range topics {
 
 			switch k {
-
 			case 0:
 				task.Topic0 = v
 			case 1:
@@ -34,24 +33,30 @@ func Create(db *gorm.DB, user common.Hash, startBlock uint64, contract string, t
 				task.Topic3 = v
 
 			}
-
 		}
 
 	}
 
 	if len(contract) != 0 {
-
 		task.Contract = contract
-
 	}
 
-	if err := db.Create(task).Error; err != nil {
+	// Wrap insertion operation inside tx
+	if err := db.Transaction(func(tx *gorm.DB) error {
+
+		if err := db.Create(task).Error; err != nil {
+			return err
+		}
+
+		return nil
+
+	}); err != nil {
 
 		log.Printf("[❗️] Failed to create task : %s\n", err.Error())
-		return false
+		return false, ""
 
 	}
 
-	return true
+	return true, task.ID
 
 }
