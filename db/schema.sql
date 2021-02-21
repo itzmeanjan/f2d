@@ -20,6 +20,7 @@ create table tasks (
     topic2 char(66),
     topic3 char(66),
     ts timestamp not null,
+    enabled boolean default true,
     foreign key (client) references users(apikey)
 );
 
@@ -30,6 +31,7 @@ create index on tasks(topic0);
 create index on tasks(topic1);
 create index on tasks(topic2);
 create index on tasks(topic3);
+create index on tasks(enabled);
 
 create table event_logs (
     origin char(42) not null,

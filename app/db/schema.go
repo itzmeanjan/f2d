@@ -30,6 +30,7 @@ type Tasks struct {
 	Topic2     string    `gorm:"column:topic2;type:char(66);index"`
 	Topic3     string    `gorm:"column:topic3;type:char(66);index"`
 	TimeStamp  time.Time `gorm:"column:ts;type:timestamp;not null"`
+	Enabled    bool      `gorm:"column:enabled;type:boolean;default:true;index"`
 	Users      Users     `gorm:"foreignKey:client;references:apikey"`
 }
 
