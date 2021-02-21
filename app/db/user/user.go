@@ -52,3 +52,17 @@ func mutateState(db *gorm.DB, apiKey common.Hash, state bool) bool {
 	return true
 
 }
+
+// Enable - Given exisiting ( disabled ) APIKey, attempts to activate it
+func Enable(db *gorm.DB, apiKey common.Hash) bool {
+
+	return mutateState(db, apiKey, true)
+
+}
+
+// Disable - Given exisiting ( enabled ) APIKey, attempts to deactivate it
+func Disable(db *gorm.DB, apiKey common.Hash) bool {
+
+	return mutateState(db, apiKey, false)
+
+}
