@@ -83,3 +83,17 @@ func mutateState(db *gorm.DB, id string, state bool) bool {
 	return true
 
 }
+
+// Enable - Given exisiting ( disabled ) task id, attempts to activate it
+func Enable(db *gorm.DB, id string) bool {
+
+	return mutateState(db, id, true)
+
+}
+
+// Disable - Given exisiting ( enabled ) task id, attempts to deactivate it
+func Disable(db *gorm.DB, id string) bool {
+
+	return mutateState(db, id, false)
+
+}
