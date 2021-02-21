@@ -41,10 +41,9 @@ func Create(db *gorm.DB, user common.Hash, startBlock uint64, contract string, t
 		task.Contract = contract
 	}
 
-	// Wrap insertion operation inside tx
 	if err := db.Transaction(func(tx *gorm.DB) error {
 
-		if err := db.Create(task).Error; err != nil {
+		if err := tx.Create(task).Error; err != nil {
 			return err
 		}
 
@@ -65,9 +64,10 @@ func Create(db *gorm.DB, user common.Hash, startBlock uint64, contract string, t
 // its activation state ( boolean )
 func mutateState(db *gorm.DB, id string, state bool) bool {
 
+	// Wrap mutation operation inside tx
 	if err := db.Transaction(func(tx *gorm.DB) error {
 
-		if err := db.Model(&schema.Tasks{}).Where("id = ?", id).Update("enabled = ?", state).Error; err != nil {
+		if err := tx.Model(&schema.Tasks{}).Where("id = ?", id).Update("enabled = ?", state).Error; err != nil {
 			return err
 		}
 
