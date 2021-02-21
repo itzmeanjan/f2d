@@ -7,12 +7,12 @@ import (
 	"gorm.io/gorm"
 )
 
-// Create - Creates new event log entry in DB
-func Create(db *gorm.DB, event *schema.EventLogs) bool {
+// Create - Creates new event log entry(ies) in DB
+func Create(db *gorm.DB, events []*schema.EventLogs) bool {
 
-	if event == nil {
+	if events == nil || len(events) == 0 {
 
-		log.Printf("[❗️] No event log to insert\n")
+		log.Printf("[❗️] No event log(s) to insert\n")
 		return false
 
 	}
@@ -20,11 +20,11 @@ func Create(db *gorm.DB, event *schema.EventLogs) bool {
 	// Wrap write operation inside tx
 	if err := db.Transaction(func(tx *gorm.DB) error {
 
-		return tx.Create(event).Error
+		return tx.Create(events).Error
 
 	}); err != nil {
 
-		log.Printf("[❗️] Failed to insert event log : %s\n", err.Error())
+		log.Printf("[❗️] Failed to insert event log(s) : %s\n", err.Error())
 		return false
 
 	}
