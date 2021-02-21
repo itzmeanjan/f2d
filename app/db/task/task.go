@@ -9,66 +9,39 @@ import (
 	"gorm.io/gorm"
 )
 
-// Create - ...
-func Create(db *gorm.DB, user common.Hash, startBlock uint64, contract common.Address, topics []common.Hash) bool {
+// Create - Attempts to create one task entry in DB
+func Create(db *gorm.DB, user common.Hash, startBlock uint64, contract string, topics map[uint8]string) bool {
 
-	var task *schema.Tasks
+	task := &schema.Tasks{
+		Client:     user.Hex(),
+		StartBlock: startBlock,
+		TimeStamp:  time.Now().UTC(),
+	}
 
-	switch len(topics) {
-	case 0:
+	if topics != nil {
 
-		task = &schema.Tasks{
-			Client:     user.Hex(),
-			StartBlock: startBlock,
-			Contract:   contract.Hex(),
-			TimeStamp:  time.Now().UTC(),
+		for k, v := range topics {
+
+			switch k {
+
+			case 0:
+				task.Topic0 = v
+			case 1:
+				task.Topic1 = v
+			case 2:
+				task.Topic2 = v
+			case 3:
+				task.Topic3 = v
+
+			}
+
 		}
 
-	case 1:
+	}
 
-		task = &schema.Tasks{
-			Client:     user.Hex(),
-			StartBlock: startBlock,
-			Contract:   contract.Hex(),
-			Topic0:     topics[0].Hex(),
-			TimeStamp:  time.Now().UTC(),
-		}
+	if len(contract) != 0 {
 
-	case 2:
-
-		task = &schema.Tasks{
-			Client:     user.Hex(),
-			StartBlock: startBlock,
-			Contract:   contract.Hex(),
-			Topic0:     topics[0].Hex(),
-			Topic1:     topics[1].Hex(),
-			TimeStamp:  time.Now().UTC(),
-		}
-
-	case 3:
-
-		task = &schema.Tasks{
-			Client:     user.Hex(),
-			StartBlock: startBlock,
-			Contract:   contract.Hex(),
-			Topic0:     topics[0].Hex(),
-			Topic1:     topics[1].Hex(),
-			Topic2:     topics[2].Hex(),
-			TimeStamp:  time.Now().UTC(),
-		}
-
-	case 4:
-
-		task = &schema.Tasks{
-			Client:     user.Hex(),
-			StartBlock: startBlock,
-			Contract:   contract.Hex(),
-			Topic0:     topics[0].Hex(),
-			Topic1:     topics[1].Hex(),
-			Topic2:     topics[2].Hex(),
-			Topic3:     topics[3].Hex(),
-			TimeStamp:  time.Now().UTC(),
-		}
+		task.Contract = contract
 
 	}
 
