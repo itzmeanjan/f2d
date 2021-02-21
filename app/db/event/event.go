@@ -39,7 +39,9 @@ func Remove(db *gorm.DB, blockNumber uint64) bool {
 
 	if err := db.Transaction(func(tx *gorm.DB) error {
 
-		return tx.Where("blocknumber = ?", blockNumber).Delete(&schema.EventLogs{}).Error
+		return tx.
+			Where("blocknumber = ?", blockNumber).
+			Delete(&schema.EventLogs{}).Error
 
 	}); err != nil {
 

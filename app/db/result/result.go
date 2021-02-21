@@ -49,3 +49,24 @@ func Create(db *gorm.DB, blockHash common.Hash, index uint, taskIds []string) bo
 	return true
 
 }
+
+// Remove - Given unique event log identifier, attempts to
+// remove all entries associated with that event log
+func Remove(db *gorm.DB, blockHash common.Hash, index uint) bool {
+
+	if err := db.Transaction(func(tx *gorm.DB) error {
+
+		return tx.
+			Where("blockhash = ? and index = ?", blockHash.Hex(), index).
+			Delete(&schema.TaskResults{}).Error
+
+	}); err != nil {
+
+		log.Printf("[❗️] Failed to remove task result(s) : %s\n", err.Error())
+		return false
+
+	}
+
+	return true
+
+}
