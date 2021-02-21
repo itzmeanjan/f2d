@@ -31,3 +31,24 @@ func Create(db *gorm.DB, apiKey common.Hash, address common.Address) bool {
 	return true
 
 }
+
+// mutateState - Attempts to mutate state of existing APIKey
+func mutateState(db *gorm.DB, apiKey common.Hash, state bool) bool {
+
+	// Wrap mutation operation inside tx
+	if err := db.Transaction(func(tx *gorm.DB) error {
+
+		return tx.Model(&schema.Users{}).
+			Where("apikey = ?", apiKey.Hex()).
+			Update("enabled = ?", state).Error
+
+	}); err != nil {
+
+		log.Printf("[❗️] Failed to mutate state of APIKey : %s\n", err.Error())
+		return false
+
+	}
+
+	return true
+
+}
