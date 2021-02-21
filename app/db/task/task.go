@@ -60,3 +60,26 @@ func Create(db *gorm.DB, user common.Hash, startBlock uint64, contract string, t
 	return true, task.ID
 
 }
+
+// mutateState - Given an existing task id, attempts to mutate
+// its activation state ( boolean )
+func mutateState(db *gorm.DB, id string, state bool) bool {
+
+	if err := db.Transaction(func(tx *gorm.DB) error {
+
+		if err := db.Model(&schema.Tasks{}).Where("id = ?", id).Update("enabled = ?", state).Error; err != nil {
+			return err
+		}
+
+		return nil
+
+	}); err != nil {
+
+		log.Printf("[❗️] Failed to mutate state of task : %s\n", err.Error())
+		return false
+
+	}
+
+	return true
+
+}
