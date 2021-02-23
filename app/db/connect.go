@@ -21,6 +21,7 @@ func Connect() *gorm.DB {
 		config.GetDbPort(),
 		config.GetDbName())),
 		&gorm.Config{
+			CreateBatchSize:        10, // when performing multi DML ops, they will be splitted into batch size of 10
 			Logger:                 logger.Default.LogMode(logger.Silent),
 			SkipDefaultTransaction: true, // all db writing to be wrapped inside transaction manually
 		})
