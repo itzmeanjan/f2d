@@ -54,7 +54,7 @@ create table task_results (
     blockhash char(66) not null,
     id uuid not null,
     primary key(blockhash, index, id),
-    foreign key (index) references event_logs(index),
-    foreign key (blockhash) references event_logs(blockhash),
+    foreign key (index) references event_logs(index) on delete cascade,
+    foreign key (blockhash) references event_logs(blockhash) on delete cascade,
     foreign key (id) references tasks(id)
 );
