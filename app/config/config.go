@@ -55,3 +55,13 @@ func GetDbPort() uint16 {
 func GetDbName() string {
 	return Get("DB_NAME")
 }
+
+// GetEtteWSURL - Returns `ette`'s websocket URL
+func GetEtteWSURL() string {
+	return Get("Ette_WS_URL")
+}
+
+// GetEtteHTTPURL - Returns `ette`'s HTTP URL
+func GetEtteHTTPURL() string {
+	return Get("Ette_HTTP_URL")
+}
