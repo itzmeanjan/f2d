@@ -8,3 +8,10 @@ import "gorm.io/gorm"
 type Resources struct {
 	DB *gorm.DB
 }
+
+// EtteSubscriptionRequest - Subscribe to event(s) of interest, emitted by `ette`
+type EtteSubscriptionRequest struct {
+	Name   string `json:"name"`
+	Type   string `json:"type"`
+	APIKey string `json:"apiKey"`
+}
