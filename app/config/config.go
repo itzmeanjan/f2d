@@ -65,3 +65,8 @@ func GetEtteWSURL() string {
 func GetEtteHTTPURL() string {
 	return Get("Ette_HTTP_URL")
 }
+
+// GetEtteAPIKey - Returns `ette` APIKey
+func GetEtteAPIKey() string {
+	return Get("Ette_APIKey")
+}
