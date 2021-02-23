@@ -60,7 +60,7 @@ type TaskResults struct {
 	BlockHash string    `gorm:"column:blockhash;type:char(66);not null;primaryKey"`
 	Index     uint      `gorm:"column:index;type:integer;not null;primaryKey"`
 	ID        string    `gorm:"column:id;type:uuid;not null;primaryKey"`
-	EventLogs EventLogs `gorm:"foreignKey:blockhash,index;references:blockhash,index"`
+	EventLogs EventLogs `gorm:"foreignKey:blockhash,index;references:blockhash,index;constraint:OnDelete:CASCADE"`
 	Tasks     Tasks     `gorm:"foreignKey:id;references:id"`
 }
 
