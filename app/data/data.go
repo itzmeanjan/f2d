@@ -15,3 +15,22 @@ type EtteSubscriptionRequest struct {
 	Type   string `json:"type"`
 	APIKey string `json:"apiKey"`
 }
+
+// Block - Newly mined block to be received in this form
+type Block struct {
+	Hash                string  `json:"hash"`
+	Number              uint64  `json:"number"`
+	Time                uint64  `json:"time"`
+	ParentHash          string  `json:"parentHash"`
+	Difficulty          string  `json:"difficulty"`
+	GasUsed             uint64  `json:"gasUsed"`
+	GasLimit            uint64  `json:"gasLimit"`
+	Nonce               string  `json:"nonce"`
+	Miner               string  `json:"miner"`
+	Size                float64 `json:"size"`
+	StateRootHash       string  `json:"stateRootHash"`
+	UncleHash           string  `json:"uncleHash"`
+	TransactionRootHash string  `json:"txRootHash"`
+	ReceiptRootHash     string  `json:"receiptRootHash"`
+	ExtraData           string  `json:"extraData"`
+}
