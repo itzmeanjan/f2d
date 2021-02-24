@@ -35,6 +35,8 @@ func Subscribe(ctx context.Context) bool {
 
 	go func() {
 
+		var first bool = true
+
 		for {
 			select {
 
@@ -45,7 +47,34 @@ func Subscribe(ctx context.Context) bool {
 
 			default:
 
-				var block data.Block
+				// After subscription request is sent to `ette`,
+				// we're expecting to receive subscription confirmation message
+				//
+				// Once subscription is confirmed, it'll now expect block(s), as soon
+				// as they get mined
+				if first {
+
+					var confirmation data.EtteSubscriptionResponse
+
+					if err := conn.ReadJSON(&confirmation); err != nil {
+
+						log.Printf("[❗️] Failed to receive confirmation from `ette` : %s\n", err.Error())
+						break
+
+					}
+
+					if confirmation.Code == 0 {
+
+						log.Printf("[❗️] Failed to subscribe to `ette` events\n")
+						break
+
+					}
+
+					first = !first
+
+				}
+
+				var block data.EtteBlock
 
 				if err := conn.ReadJSON(&block); err != nil {
 
