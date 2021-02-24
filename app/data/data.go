@@ -16,8 +16,14 @@ type EtteSubscriptionRequest struct {
 	APIKey string `json:"apiKey"`
 }
 
-// Block - Newly mined block to be received in this form
-type Block struct {
+// EtteSubscriptionResponse - Event subscription/ unsubscription response from `ette`
+type EtteSubscriptionResponse struct {
+	Code    uint   `json:"code"`
+	Message string `json:"msg"`
+}
+
+// EtteBlock - Newly mined block to be received in this form, from `ette`
+type EtteBlock struct {
 	Hash                string  `json:"hash"`
 	Number              uint64  `json:"number"`
 	Time                uint64  `json:"time"`
