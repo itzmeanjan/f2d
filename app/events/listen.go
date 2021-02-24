@@ -24,7 +24,7 @@ func Subscribe(ctx context.Context) (bool, chan struct{}) {
 
 	if err := conn.WriteJSON(&data.EtteSubscriptionRequest{
 		Name:   "block",
-		Type:   "subscription",
+		Type:   "subscribe",
 		APIKey: config.GetEtteAPIKey(),
 	}); err != nil {
 
@@ -39,13 +39,14 @@ func Subscribe(ctx context.Context) (bool, chan struct{}) {
 
 		var first bool = true
 
+	OUTER:
 		for {
 			select {
 
 			case <-ctx.Done():
 
 				log.Printf("[➕] Shutting down listener\n")
-				break
+				break OUTER
 
 			default:
 
@@ -66,19 +67,19 @@ func Subscribe(ctx context.Context) (bool, chan struct{}) {
 						// supervisor know, this worker has failed
 						close(comm)
 
-						break
+						break OUTER
 
 					}
 
 					if confirmation.Code == 0 {
 
-						log.Printf("[❗️] Failed to subscribe to `ette` events\n")
+						log.Printf("[❗️] Failed to subscribe to `ette` events : %s\n", confirmation.Message)
 
 						// Closing communication channel to let
 						// supervisor know, this worker has failed
 						close(comm)
 
-						break
+						break OUTER
 
 					}
 
@@ -96,10 +97,11 @@ func Subscribe(ctx context.Context) (bool, chan struct{}) {
 					// supervisor know, this worker has failed
 					close(comm)
 
-					break
+					break OUTER
 
 				}
 
+				log.Printf("[*] Block %d\n", block.Number)
 				// @note Do process this block
 
 			}

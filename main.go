@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	log.Printf("Firebase for DApps 🔥")
+	log.Printf("Firebase for DApps 🔥\n")
 
 	ctx, cancel := context.WithCancel(context.TODO())
 
@@ -64,6 +64,7 @@ func main() {
 
 		}()
 
+	OUTER:
 		for {
 
 			select {
@@ -75,7 +76,7 @@ func main() {
 				// wants all to shut down, they must do a graceful stop
 				// of what they're doing now
 				cancel()
-				break
+				break OUTER
 
 			case <-comm:
 
@@ -90,12 +91,15 @@ func main() {
 
 				// Asking all go routines to stop
 				cancel()
-				break
+				break OUTER
 
 			}
 
 		}
 
 	}()
+
+	c := make(chan struct{})
+	<-c
 
 }
