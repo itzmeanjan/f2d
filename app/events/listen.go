@@ -12,13 +12,13 @@ import (
 // Subscribe - Subscribe to event emitted by `ette`, for listening to
 // new block getting mined/ event logs getting emitted due to contract interaction
 // and attempt to process those events
-func Subscribe(ctx context.Context) bool {
+func Subscribe(ctx context.Context) (bool, chan struct{}) {
 
 	conn, _, err := websocket.DefaultDialer.DialContext(ctx, config.GetEtteWSURL(), nil)
 	if err != nil {
 
 		log.Printf("[❗️] Failed to connect to `ette`: %s\n", err.Error())
-		return false
+		return false, nil
 
 	}
 
@@ -29,9 +29,11 @@ func Subscribe(ctx context.Context) bool {
 	}); err != nil {
 
 		log.Printf("[❗️] Failed to send subscription request to `ette`: %s\n", err.Error())
-		return false
+		return false, nil
 
 	}
+
+	comm := make(chan struct{})
 
 	go func() {
 
@@ -59,6 +61,11 @@ func Subscribe(ctx context.Context) bool {
 					if err := conn.ReadJSON(&confirmation); err != nil {
 
 						log.Printf("[❗️] Failed to receive confirmation from `ette` : %s\n", err.Error())
+
+						// Closing communication channel to let
+						// supervisor know, this worker has failed
+						close(comm)
+
 						break
 
 					}
@@ -66,6 +73,11 @@ func Subscribe(ctx context.Context) bool {
 					if confirmation.Code == 0 {
 
 						log.Printf("[❗️] Failed to subscribe to `ette` events\n")
+
+						// Closing communication channel to let
+						// supervisor know, this worker has failed
+						close(comm)
+
 						break
 
 					}
@@ -79,6 +91,11 @@ func Subscribe(ctx context.Context) bool {
 				if err := conn.ReadJSON(&block); err != nil {
 
 					log.Printf("[❗️] Failed to read event from `ette` : %s\n", err.Error())
+
+					// Closing communication channel to let
+					// supervisor know, this worker has failed
+					close(comm)
+
 					break
 
 				}
@@ -90,6 +107,6 @@ func Subscribe(ctx context.Context) bool {
 
 	}()
 
-	return true
+	return true, comm
 
 }
