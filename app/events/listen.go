@@ -45,6 +45,25 @@ func Subscribe(ctx context.Context) (bool, chan struct{}) {
 
 			case <-ctx.Done():
 
+				// When master asking to stop operations
+				// it'll first attempt to unsubscribe from subscribed topic(s)
+				if err := conn.WriteJSON(&data.EtteSubscriptionRequest{
+					Name:   "block",
+					Type:   "unsubscribe",
+					APIKey: config.GetEtteAPIKey(),
+				}); err != nil {
+
+					log.Printf("[❗️] Failed to send unsubscription request to `ette`: %s\n", err.Error())
+
+				}
+
+				// Then it'll close underlying websocket connection
+				if err := conn.Close(); err != nil {
+
+					log.Printf("[❗️] Failed to close connection with `ette`: %s\n", err.Error())
+
+				}
+
 				log.Printf("[➕] Shutting down listener\n")
 				break OUTER
 

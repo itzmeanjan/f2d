@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/itzmeanjan/f2d/app"
 	"github.com/itzmeanjan/f2d/app/events"
@@ -76,6 +77,9 @@ func main() {
 				// wants all to shut down, they must do a graceful stop
 				// of what they're doing now
 				cancel()
+
+				// Giving workers 3 seconds, before forcing shutdown
+				<-time.After(time.Second * time.Duration(3))
 				break OUTER
 
 			case <-comm:
