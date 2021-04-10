@@ -38,6 +38,8 @@ func Subscribe(ctx context.Context) (bool, chan struct{}) {
 	go func() {
 
 		var first bool = true
+		var isStartBlock bool = true
+		var startedWith uint64 = 0
 
 	OUTER:
 		for {
@@ -103,6 +105,7 @@ func Subscribe(ctx context.Context) (bool, chan struct{}) {
 					}
 
 					first = !first
+					break
 
 				}
 
@@ -118,6 +121,15 @@ func Subscribe(ctx context.Context) (bool, chan struct{}) {
 
 					break OUTER
 
+				}
+
+				if isStartBlock {
+					startedWith = block.Number
+					isStartBlock = !isStartBlock
+				}
+
+				if !(startedWith <= block.Number) {
+					break
 				}
 
 				log.Printf("[*] Block %d\n", block.Number)
