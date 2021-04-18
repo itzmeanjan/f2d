@@ -55,3 +55,13 @@ func GetDbPort() uint16 {
 func GetDbName() string {
 	return Get("DB_NAME")
 }
+
+// GetRPCHTTPURL - To be used for connecting to RPC node, over HTTP transport
+func GetRPCHTTPURL() string {
+	return Get("RPC_HTTP_URL")
+}
+
+// GetRPCWSURL - To be used for connecting to RPC node, over WS transport
+func GetRPCWSURL() string {
+	return Get("RPC_WS_URL")
+}
