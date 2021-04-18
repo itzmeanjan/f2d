@@ -16,11 +16,10 @@ func main() {
 	log.Printf("Firebase for DApps 🔥\n")
 
 	ctx, cancel := context.WithCancel(context.TODO())
+	res, err := app.SetUp(ctx)
+	if err != nil {
 
-	resources := app.SetUp()
-	if resources == nil {
-
-		log.Printf("[❗️] Shutting down `f2d`\n")
+		log.Printf("[❗️] Shutting down `f2d` : %s\n", err.Error())
 		os.Exit(1)
 
 	}
@@ -44,7 +43,7 @@ func main() {
 		// go rountine's execution scope
 		defer func() {
 
-			if err := resources.Release(); err != nil {
+			if err := res.Release(); err != nil {
 				log.Printf("[❗️] Graceful resource release failed : %s\n", err.Error())
 				os.Exit(1)
 			}
