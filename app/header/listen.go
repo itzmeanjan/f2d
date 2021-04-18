@@ -23,6 +23,11 @@ func Subscribe(ctx context.Context, rpc *ethclient.Client, closeChan chan struct
 	for {
 
 		select {
+
+		case <-ctx.Done():
+			sub.Unsubscribe()
+			return
+
 		case err := <-sub.Err():
 			log.Printf("[❗️] Header subscription canceled : %s\n", err.Error())
 
