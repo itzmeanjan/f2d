@@ -1,12 +1,42 @@
 package data
 
-import "gorm.io/gorm"
+import (
+	"github.com/ethereum/go-ethereum/ethclient"
+	"gorm.io/gorm"
+)
+
+// RPCClients - Two clients connected to RPC node
+// over both HTTP & WS transport
+type RPCClients struct {
+	HTTP, WS *ethclient.Client
+}
 
 // Resources - File, database, network resources which are to be accessed
 // from several go routines, fulfilling different purposes, to be kept/ passed
 // along using this struct
 type Resources struct {
-	DB *gorm.DB
+	DB  *gorm.DB
+	RPC *RPCClients
+}
+
+// Release - Before shutting down application, release
+// resources in a graceful manner
+func (r *Resources) Release() error {
+
+	sql, err := r.DB.DB()
+	if err != nil {
+		return err
+	}
+
+	if err := sql.Close(); err != nil {
+		return err
+	}
+
+	r.RPC.HTTP.Close()
+	r.RPC.WS.Close()
+
+	return nil
+
 }
 
 // EtteSubscriptionRequest - Subscribe to event(s) of interest, emitted by `ette`

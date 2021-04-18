@@ -44,23 +44,13 @@ func main() {
 		// go rountine's execution scope
 		defer func() {
 
-			sql, err := resources.DB.DB()
-			if err != nil {
-
-				log.Printf("[❗️] Failed to get underlying DB connection : %s\n", err.Error())
-				return
-
+			if err := resources.Release(); err != nil {
+				log.Printf("[❗️] Graceful resource release failed : %s\n", err.Error())
+				os.Exit(1)
 			}
 
-			if err := sql.Close(); err != nil {
-
-				log.Printf("[❗️] Failed to close underlying DB connection : %s\n", err.Error())
-				return
-
-			}
-
-			// Stopping process
-			log.Printf("\n[✅] Gracefully shut down `f2d`\n")
+			// Stopping process, gracefully
+			log.Printf("[✅] Gracefully shut down `f2d`\n")
 			os.Exit(0)
 
 		}()
