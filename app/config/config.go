@@ -56,21 +56,6 @@ func GetDbName() string {
 	return Get("DB_NAME")
 }
 
-// GetEtteWSURL - Returns `ette`'s websocket URL
-func GetEtteWSURL() string {
-	return Get("Ette_WS_URL")
-}
-
-// GetEtteHTTPURL - Returns `ette`'s HTTP URL
-func GetEtteHTTPURL() string {
-	return Get("Ette_HTTP_URL")
-}
-
-// GetEtteAPIKey - Returns `ette` APIKey
-func GetEtteAPIKey() string {
-	return Get("Ette_APIKey")
-}
-
 // GetRPCHTTPURL - To be used for connecting to RPC node, over HTTP transport
 func GetRPCHTTPURL() string {
 	return Get("RPC_HTTP_URL")
