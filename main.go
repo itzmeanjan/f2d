@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/itzmeanjan/f2d/app"
-	"github.com/itzmeanjan/f2d/app/events"
+	"github.com/itzmeanjan/f2d/app/header"
 )
 
 func main() {
@@ -24,18 +24,15 @@ func main() {
 
 	}
 
-	status, comm := events.Subscribe(ctx)
-	if !status {
-
-		log.Printf("[❗️] Shutting down `f2d`\n")
-		os.Exit(1)
-
-	}
+	// Channel for listening if header subscriber routine
+	// has died or alive
+	headerSubCloseChan := make(chan struct{}, 1)
+	go header.Subscribe(ctx, res.RPC.WS, headerSubCloseChan)
 
 	// Attempt to catch interrupt event(s)
 	// so that graceful shutdown can be performed
 	interruptChan := make(chan os.Signal, 1)
-	signal.Notify(interruptChan, syscall.SIGTERM, syscall.SIGINT, syscall.SIGKILL)
+	signal.Notify(interruptChan, syscall.SIGTERM, syscall.SIGINT)
 
 	go func() {
 
@@ -71,16 +68,7 @@ func main() {
 				<-time.After(time.Second * time.Duration(3))
 				break OUTER
 
-			case <-comm:
-
-				// As soon as it's received that `ette` event listener
-				// has been stopped, `f2d` will attempt to do a graceful shutdown
-				//
-				// @note This can be handled better by spwaning new go routine
-				// which will attempt to subscribe to `ette`
-				//
-				// But also need to take care of circuit breaking in that case
-				log.Printf("[❗️] `ette` event listener stopped\n")
+			case <-headerSubCloseChan:
 
 				// Asking all go routines to stop
 				cancel()

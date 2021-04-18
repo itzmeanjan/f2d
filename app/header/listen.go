@@ -14,7 +14,7 @@ func Subscribe(ctx context.Context, rpc *ethclient.Client, closeChan chan struct
 	headerChan := make(chan *types.Header, 1)
 	sub, err := rpc.SubscribeNewHead(ctx, headerChan)
 	if err != nil {
-		log.Printf("[!] Failed to subscribe to block headers : %s\n", err.Error())
+		log.Printf("[❗️] Failed to subscribe to block headers : %s\n", err.Error())
 
 		close(closeChan)
 		return
@@ -24,7 +24,7 @@ func Subscribe(ctx context.Context, rpc *ethclient.Client, closeChan chan struct
 
 		select {
 		case err := <-sub.Err():
-			log.Printf("[!] Header subscription canceled : %s\n", err.Error())
+			log.Printf("[❗️] Header subscription canceled : %s\n", err.Error())
 
 			close(closeChan)
 			return
